@@ -87,7 +87,8 @@ public struct OpenTelemetry: Sendable {
   }
 
   /// On platforms that support the original default context manager, it is prefered over the structured concurrency context manager when initializing OpenTelemetry. Call this method to register the default structured concurrency context manager instead.
-  public static func registerDefaultConcurrencyContextManager() {
+    @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
+    public static func registerDefaultConcurrencyContextManager() {
     _OpenTelemetry.registerContextManager(contextManager: TaskLocalContextManager.instance)
   }
 
@@ -139,10 +140,12 @@ public struct OpenTelemetryContextProvider {
   }
 
   /// Sets `span` as the active span for the duration of the given closure. While the span will no longer be active after the closure exits, this method does **not** end the span. Prefer `SpanBuilderBase.withActiveSpan` which handles starting, activating, and ending the span.
+  @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
   public func withActiveSpan<T>(_ span: SpanBase, _ operation: () async throws -> T) async rethrows -> T {
     try await contextManager.withCurrentContextValue(forKey: .span, value: span, operation)
   }
 
+  @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
   public func withActiveBaggage<T>(_ baggage: Baggage, _ operation: () async throws -> T) async rethrows -> T {
     try await contextManager.withCurrentContextValue(forKey: .baggage, value: baggage, operation)
   }
